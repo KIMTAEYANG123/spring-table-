@@ -1,6 +1,7 @@
 package hacs.mvc.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
@@ -18,4 +19,6 @@ public interface BoardRepository {
 	void update(Board board);
 //	삭제
 	void delete(int boardSeq);
+	
+	void saveList(Map<String,Object> paramMap);
 }

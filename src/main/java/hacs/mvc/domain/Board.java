@@ -8,4 +8,13 @@ public class Board {
 	private String title;
 	private String contents;
 	private String regDate;
+	
+	public Board() {
+		
+	}
+	
+	public Board(String title , String contents) {
+		this.title = title;
+		this.contents = contents;
+	}
 }
