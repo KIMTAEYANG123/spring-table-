@@ -6,11 +6,12 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import hacs.mvc.domain.Board;
+import hacs.mvc.parameter.BoardSearchParameter;
 
 @Repository
 public interface BoardRepository {
 	
-	List<Board> getList();
+	List<Board> getList(BoardSearchParameter param);
 	
 	Board get(int boardSeq);
 //	등록

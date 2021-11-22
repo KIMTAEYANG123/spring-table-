@@ -1,5 +1,9 @@
 package hacs.mvc.parameter;
 
+
+
+import java.util.List;
+
 import lombok.Data;
 
 
@@ -12,7 +16,7 @@ import lombok.Data;
 public class BoardSearchParameter {
 	
 	private String keyword;
-	
+	private List<BoardType> boardTypes;
 	public BoardSearchParameter() {
 		
 	}
