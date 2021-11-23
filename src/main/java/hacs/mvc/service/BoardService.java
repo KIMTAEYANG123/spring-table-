@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import hacs.mvc.domain.Board;
+import hacs.mvc.domain.PageRequestParameter;
 import hacs.mvc.parameter.BoardSearchParameter;
 import hacs.mvc.repository.BoardRepository;
 import jdk.internal.org.jline.utils.Log;
@@ -38,8 +39,8 @@ public class BoardService {
 	 * 목록 리턴
 	 * @return
 	 */
-	public List<Board> getList(BoardSearchParameter param){
-		return repository.getList(param);
+	public List<Board> getList(PageRequestParameter<BoardSearchParameter> pageRequestParameter){
+		return repository.getList(pageRequestParameter);
 	}
 	
 	/** 상세 정보

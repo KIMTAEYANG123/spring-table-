@@ -19,6 +19,8 @@ import hacs.configuration.exception.BaseException;
 import hacs.configuration.http.BaseResponse;
 import hacs.configuration.http.BaseResponseCode;
 import hacs.mvc.domain.Board;
+import hacs.mvc.domain.PageRequest;
+import hacs.mvc.domain.PageRequestParameter;
 import hacs.mvc.parameter.BoardSearchParameter;
 import hacs.mvc.service.BoardService;
 import io.swagger.annotations.Api;
@@ -51,9 +53,10 @@ public class BoardController {
 	@GetMapping
 //	해당 api에 대한 설명 
 	@ApiOperation(value ="목록 조회", notes = "게시물 번호에 해당하는 목록 정보를 조회할 수 있습니다.")
-	public BaseResponse<List<Board>> getList(@ApiParam BoardSearchParameter param){
+	public BaseResponse<List<Board>> getList(@ApiParam BoardSearchParameter param , @ApiParam PageRequest pageRequest){
 		log.info("getList");
-		return  new BaseResponse<List<Board>>(boardService.getList(param));
+		PageRequestParameter<BoardSearchParameter> pageRequestParameter  = new PageRequestParameter<BoardSearchParameter>(pageRequest, param);
+		return  new BaseResponse<List<Board>>(boardService.getList(pageRequestParameter));
 	}
 	
 	/** 상세 정보
