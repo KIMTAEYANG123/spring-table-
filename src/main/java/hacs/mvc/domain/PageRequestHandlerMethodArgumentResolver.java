@@ -51,7 +51,7 @@ public class PageRequestHandlerMethodArgumentResolver implements HandlerMethodAr
 		int limit = (offset * page) - offset;
 		log.info("page : {}", page);
 		log.info("limit : {} offset  :{}",limit , offset );
-		return new PageRequest(page, page, limit, offset);
+		return new PageRequest(page, page, limit,offset);
 	}
 	
 

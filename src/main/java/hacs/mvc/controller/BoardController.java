@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import hacs.configuration.exception.BaseException;
 import hacs.configuration.http.BaseResponse;
 import hacs.configuration.http.BaseResponseCode;
+import hacs.configuration.web.bind.annotation.RequestConfig;
 import hacs.mvc.domain.Board;
 import hacs.mvc.domain.PageRequest;
 import hacs.mvc.domain.PageRequestParameter;
@@ -82,6 +83,7 @@ public class BoardController {
 	 * @param board
 	 */
 	@PutMapping
+	@RequestConfig
 	@ApiOperation(value ="등록 수정", notes = "신규 게시물 저장 및 기존 게시물 수정을 할 수 있습니다.")
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "boardSeq" , value = "게시물 번호", example = "1"),
@@ -107,7 +109,8 @@ public class BoardController {
 	 * @param boardSeq
 	 */
 	@DeleteMapping("/{boardSeq}")
-	@ApiOperation(value ="등록 수정", notes = "게시물 번호에 해당하는 게시물을 삭제합니다.")
+	@RequestConfig
+	@ApiOperation(value ="게시판 삭제", notes = "게시물 번호에 해당하는 게시물을 삭제합니다.")
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "boardSeq" , value = "게시물 번호", example = "1"),
 	})

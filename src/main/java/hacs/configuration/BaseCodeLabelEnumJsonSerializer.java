@@ -19,7 +19,7 @@ public class BaseCodeLabelEnumJsonSerializer extends JsonSerializer<BaseCodeLabe
 	@Override
 	public void serialize(BaseCodeLabelEnum value, JsonGenerator gen, SerializerProvider serializers)
 			throws IOException {
-		Map<String,String> map = new HashMap<>();
+		Map<String,Object> map = new HashMap<>();
 		map.put("code", value.code());
 		map.put("label", value.label());
 		gen.writeObject(map);

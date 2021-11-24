@@ -1,6 +1,7 @@
 package hacs.mvc.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /** 게시판 종류
  * @author USER
@@ -13,7 +14,9 @@ public enum BoardType implements BaseCodeLabelEnum {
 	INQUIRY("1:1문의"),
 	;
 
+	@JsonValue
 	private String code;
+	@JsonValue
 	private String label;
 	
 	BoardType(String label) {
@@ -30,7 +33,6 @@ public enum BoardType implements BaseCodeLabelEnum {
 
 	@Override
 	public String label() {
-		// TODO Auto-generated method stub
 		return label;
 	}
 
