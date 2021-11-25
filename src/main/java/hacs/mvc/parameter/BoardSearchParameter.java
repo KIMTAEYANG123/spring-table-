@@ -4,6 +4,7 @@ package hacs.mvc.parameter;
 
 import java.util.List;
 
+import hacs.mvc.domain.BoardType;
 import lombok.Data;
 
 

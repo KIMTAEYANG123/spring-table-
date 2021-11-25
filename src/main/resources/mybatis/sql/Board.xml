@@ -3,12 +3,17 @@
 <mapper namespace="hacs.mvc.repository.BoardRepository">
 
 
-	<select id="getList" parameterType="hacs.mvc.domain.PageRequestParameter" resultType ="hacs.mvc.domain.Board">
+	<resultMap type="hacs.mvc.domain.Board" id="getListResultMap">
+		<result column = "DEL_YN" property="delYn" typeHandler="hacs.configuration.mybatis.typehandler.StringValueBooleanHandler"/>
+	</resultMap>
+
+	<select id="getList" parameterType="hacs.mvc.domain.PageRequestParameter" resultMap ="getListResultMap">
 		select
 			B.BOARD_SEQ,
 			B.TITLE,
 			B.CONTENTS,
-			B.REG_DATE
+			B.REG_DATE,
+			B.DEL_YN
 		from T_BOARD B
 		
 		 <where>
@@ -28,7 +33,7 @@
 		LIMIT ${pageRequest.limit}, #{pageRequest.offset}
 	</select>
 	
-	<select id="get" parameterType="int" resultType ="hacs.mvc.domain.Board">
+	<select id="get" parameterType="long" resultType ="hacs.mvc.domain.Board">
 		select
 			B.BOARD_SEQ,
 			B.TITLE,
@@ -39,20 +44,22 @@
 	</select>
 	
 	
-	<insert id="save" parameterType="hacs.mvc.domain.Board" useGeneratedKeys = "true" keyProperty = "boardSeq">
+	<insert id="save" parameterType="hacs.mvc.domain.Board" useGeneratedKeys = "true" keyProperty = "boardSeq" >
 		INSERT INTO T_BOARD
 		(
 			TITLE,
 			BOARD_TYPE,
 			CONTENTS,
-			REG_DATE
+			REG_DATE,
+			DEL_YN
 		)
 		VALUES
 		(
 			#{title},
-			#{boardType},
+			#{boardType.code},
 			#{contents},
-			NOW()
+			NOW(),
+			#{delYn, typeHandler=hacs.configuration.mybatis.typehandler.StringValueBooleanHandler}
 		)
 	</insert>
 	
@@ -85,7 +92,7 @@
 		WHERE BOARD_SEQ = #{boardSeq}
 	</update>
 	
-	<delete id="delete" parameterType="int" >
+	<delete id="delete" parameterType="long" >
 		DELETE 
 		FROM
 			T_BOARD

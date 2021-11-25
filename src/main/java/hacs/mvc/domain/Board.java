@@ -4,11 +4,13 @@ import lombok.Data;
 
 @Data
 public class Board {
-	private int boardSeq;
+	
+	private long boardSeq;
 	private BoardType boardType;
 	private String title;
 	private String contents;
 	private String regDate;
+	private boolean delYn;
 	
 	public Board() {
 		

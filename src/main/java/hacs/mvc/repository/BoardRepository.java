@@ -14,11 +14,11 @@ public interface BoardRepository {
 	
 	List<Board> getList(PageRequestParameter<BoardSearchParameter> pageRequestParameter);
 	
-	Board get(int boardSeq);
+	Board get(long boardSeq);
 //	등록
-	void save(Board board);
+	int save(Board board);
 //	업데이트
-	void update(Board board);
+	int update(Board board);
 //	삭제
 	void delete(int boardSeq);
 	
