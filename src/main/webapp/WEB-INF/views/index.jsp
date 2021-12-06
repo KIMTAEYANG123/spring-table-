@@ -7,8 +7,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form action ="/file/save" method ="post" enctype="multipart/form-data">
-		<input type ="file" name="uploadFile"/>
+	<form action ="/attach/save" method ="post" enctype="multipart/form-data">
+		<input type ="file" name="uploadFiles"/>
 		<button type="submit">파일업로드</button>
 	</form>
 </body>

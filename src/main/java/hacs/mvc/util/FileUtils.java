@@ -11,11 +11,16 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import hacs.configuration.exception.AttachFileException;
+import hacs.configuration.exception.BaseException;
+import hacs.configuration.http.BaseResponseCode;
 import hacs.mvc.domain.Attach;
+import jdk.internal.org.jline.utils.Log;
 
 
 
@@ -29,10 +34,12 @@ import hacs.mvc.domain.Attach;
 @Component
 public class FileUtils {
 	
+	private static final Logger log = LoggerFactory.getLogger(FileUtils.class);
+
 	/** 오늘 날짜 */
 //	LocalDate.now() => result : 2021-11-25 현재 날짜
 //	format 패턴 지정한 형태로 날짜가 나옴 211125
-	private final String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd"));
+	private final String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
 	/** 업로드 경로 */
 	/**

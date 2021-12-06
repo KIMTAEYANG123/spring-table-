@@ -56,7 +56,7 @@ public class BoardService {
 	 * @param boardSeq
 	 * @return
 	 */
-	public Board get(int boardSeq) {
+	public Board get(long boardSeq) {
 		return boardRepository.get(boardSeq);
 	}
 
@@ -86,7 +86,7 @@ public class BoardService {
 			return false;
 		}
 		
-		List<Attach> fileList = fileUtils.uploadFiles(multipartFiles, param.getBoardSeq());
+		List<Attach> fileList = fileUtils.uploadFiles(multipartFiles,param.getBoardSeq());
 		log.info("파일있나요 ? {}", fileList.isEmpty());
 		
 		if(CollectionUtils.isEmpty(fileList) == false) {

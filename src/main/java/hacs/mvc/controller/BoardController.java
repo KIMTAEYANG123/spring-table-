@@ -7,8 +7,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -52,11 +51,31 @@ public class BoardController {
 	@Autowired
 	BoardService boardService;
 	
+	
+	
+	/**
+	 * 등록 / 수정 화면
+	 * @param param
+	 * @param model
+	 */
+	@GetMapping("/form")
+	@RequestConfig(loginCheck = true)
+	public void form(Board param , Model model) {
+		if(param.getBoardSeq() > 0) {
+			Board board = boardService.get(param.getBoardSeq());
+			model.addAttribute("board" , board);
+		}
+		model.addAttribute("param", param);
+	}
+	
+	
+	
+	
 	/** 전체 주석 alt + shift + j
 	 * 목록 리턴
 	 * @return
 	 */
-	@GetMapping
+	@GetMapping("/list")
 	@ResponseBody
 //	해당 api에 대한 설명 
 	@ApiOperation(value ="목록 조회", notes = "게시물 번호에 해당하는 목록 정보를 조회할 수 있습니다.")
@@ -65,6 +84,7 @@ public class BoardController {
 		PageRequestParameter<BoardSearchParameter> pageRequestParameter  = new PageRequestParameter<BoardSearchParameter>(pageRequest, param);
 		return  new BaseResponse<List<Board>>(boardService.getList(pageRequestParameter));
 	}
+	
 	
 	/** 상세 정보
 	 * @param boardSeq
@@ -89,8 +109,8 @@ public class BoardController {
 	/** 등록 및 수정 처리
 	 * @param board
 	 */
-	@PostMapping
-	@RequestConfig
+	@PostMapping("/save")
+	@RequestConfig(loginCheck = true)
 	@ResponseBody
 	@ApiOperation(value ="등록 수정", notes = "신규 게시물 저장 및 기존 게시물 수정을 할 수 있습니다.", produces = "multipart/form-data")
 	@ApiImplicitParams({
@@ -98,7 +118,8 @@ public class BoardController {
 		@ApiImplicitParam(name = "title" , value = "게시물 제목", example = "spring"),
 		@ApiImplicitParam(name = "contents" , value = "게시물 내용", example = "spring 강좌"),
 	})
-	public  BaseResponse<String> save (final Board board, @ApiParam(name="파일", value ="files", required = false) final MultipartFile files[]) {
+	
+	public  BaseResponse<String> save ( final Board board,  @ApiParam(name="파일", value ="files", required = false)  final MultipartFile[] files) {
 		
 		log.info("파일 정보 {} " , files );
 		// 제목 필수 체크
@@ -115,7 +136,7 @@ public class BoardController {
 		 if(boardSave) {
 			 return  new BaseResponse<String>( Long.toString(board.getBoardSeq())+ " file : true" );
 		 }else {
-			 return  new BaseResponse<String>(Long.toString(board.getBoardSeq()));
+			 return  new BaseResponse<String>(BaseResponseCode.SUCCEESS , "저장되었습니다.");
 		 }
 		 
 	}

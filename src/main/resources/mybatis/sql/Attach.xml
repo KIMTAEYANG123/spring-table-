@@ -15,7 +15,7 @@
 	</sql>
 	
 	<insert id="insertAttach" parameterType="list" >
-		INSERT INTO tb_attach (
+		INSERT INTO t_attach (
 			<include refid="attachColumns" />
 		) VALUES
 		<foreach collection="list" item="item" separator=",">
