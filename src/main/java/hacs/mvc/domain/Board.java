@@ -1,5 +1,7 @@
 package hacs.mvc.domain;
 
+import java.util.Date;
+
 import lombok.Data;
 
 @Data
@@ -9,7 +11,8 @@ public class Board {
 	private BoardType boardType;
 	private String title;
 	private String contents;
-	private String regDate;
+	private int viewCount;
+	private Date regDate;
 	private boolean delYn;
 	
 	public Board() {

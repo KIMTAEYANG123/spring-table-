@@ -24,6 +24,7 @@ import hacs.configuration.http.BaseResponse;
 import hacs.configuration.http.BaseResponseCode;
 import hacs.configuration.web.bind.annotation.RequestConfig;
 import hacs.mvc.domain.Board;
+import hacs.mvc.domain.MenuType;
 import hacs.mvc.domain.PageRequest;
 import hacs.mvc.domain.PageRequestParameter;
 import hacs.mvc.parameter.BoardSearchParameter;
@@ -61,11 +62,28 @@ public class BoardController {
 	@GetMapping("/form")
 	@RequestConfig(loginCheck = true)
 	public void form(Board param , Model model) {
+	
 		if(param.getBoardSeq() > 0) {
 			Board board = boardService.get(param.getBoardSeq());
 			model.addAttribute("board" , board);
 		}
 		model.addAttribute("param", param);
+	}
+	
+	/**
+	 * 등록 / 수정 화면
+	 * @param param
+	 * @param model
+	 */
+	@GetMapping("/edit/{boardSeq}")
+	@RequestConfig(loginCheck = true)
+	public String edit(@PathVariable(required = true) long boardSeq , Model model) {
+		Board board = boardService.get(boardSeq);
+		if(board == null) {
+			throw new BaseException(BaseResponseCode.DATA_IS_NULL,new String[] {"게시물"});
+		}
+		model.addAttribute("board",board);
+		return "/board/form";
 	}
 	
 	
@@ -75,14 +93,17 @@ public class BoardController {
 	 * 목록 리턴
 	 * @return
 	 */
-	@GetMapping("/list")
-	@ResponseBody
+	@GetMapping("/{menuType}")
 //	해당 api에 대한 설명 
 	@ApiOperation(value ="목록 조회", notes = "게시물 번호에 해당하는 목록 정보를 조회할 수 있습니다.")
-	public BaseResponse<List<Board>> getList(@ApiParam BoardSearchParameter param , @ApiParam PageRequest pageRequest){
-		log.info("getList");
+	public String getList(@PathVariable MenuType menuType, @ApiParam BoardSearchParameter param , @ApiParam PageRequest pageRequest, Model model){
+		
+		log.info("타입 한 번 찍어볼까요? {}", menuType);
 		PageRequestParameter<BoardSearchParameter> pageRequestParameter  = new PageRequestParameter<BoardSearchParameter>(pageRequest, param);
-		return  new BaseResponse<List<Board>>(boardService.getList(pageRequestParameter));
+		
+		List<Board> list = boardService.getList(pageRequestParameter);
+		model.addAttribute("boardList", list);
+		return "/board/list";
 	}
 	
 	
@@ -91,19 +112,20 @@ public class BoardController {
 	 * @return
 	 */
 //	url에 값이 파라미터로 들어가서 리턴 됨
-	@GetMapping(value = "/{boardSeq}")
-	@ResponseBody
+	@GetMapping(value = "/detail/{boardSeq}")
 //	스웨거에서 해당 api의 파라미터를 설명
 	@ApiOperation(value ="상세 조회", notes = "게시물 번호에 해당하는 상세 정보를 조회할 수 있습니다.")
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "boardSeq" , value = "게시물 번호", example = "1")
 	})
-	public  BaseResponse<Board> get(@PathVariable int boardSeq) {
+	public  String detail(@PathVariable int boardSeq, Model model) {
+		
 		Board board = boardService.get(boardSeq);
 		if(board == null) {
 			throw new BaseException(BaseResponseCode.DATA_IS_NULL,new String[] {"게시물"} );
 		}
-		return  new BaseResponse<Board>(boardService.get(boardSeq));
+		model.addAttribute("board", board);
+		return  "/board/detail";
 	}
 
 	/** 등록 및 수정 처리
