@@ -20,6 +20,9 @@
 			<if test ="@org.apache.commons.lang3.StringUtils@isNotEmpty(parameter.keyword)">
 				AND B.TITLE LIKE CONCAT('%' , '${parameter.keyword}' , '%')
 			</if>
+			<if test ="@org.apache.commons.lang3.ObjectUtils@isNotEmpty(parameter.boardType)">
+				AND B.BOARD_TYPE = #{parameter.boardType}
+			</if>
 			<if test ="@org.apache.commons.lang3.ObjectUtils@isNotEmpty(parameter.boardTypes)">
 				AND B.BOARD_TYPE IN (
 					<foreach collection="parameter.boardTypes" item ="value" separator=",">

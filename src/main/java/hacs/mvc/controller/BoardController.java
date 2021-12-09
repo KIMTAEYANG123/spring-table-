@@ -24,6 +24,7 @@ import hacs.configuration.http.BaseResponse;
 import hacs.configuration.http.BaseResponseCode;
 import hacs.configuration.web.bind.annotation.RequestConfig;
 import hacs.mvc.domain.Board;
+import hacs.mvc.domain.BoardType;
 import hacs.mvc.domain.MenuType;
 import hacs.mvc.domain.PageRequest;
 import hacs.mvc.domain.PageRequestParameter;
@@ -59,15 +60,17 @@ public class BoardController {
 	 * @param param
 	 * @param model
 	 */
-	@GetMapping("/form")
+	@GetMapping("/{menuType}/form")
 	@RequestConfig(loginCheck = true)
-	public void form(Board param , Model model) {
+	public String form(@PathVariable MenuType menuType, Board param , Model model) {
 	
 		if(param.getBoardSeq() > 0) {
 			Board board = boardService.get(param.getBoardSeq());
 			model.addAttribute("board" , board);
 		}
 		model.addAttribute("param", param);
+		model.addAttribute("menuType",menuType);
+		return "/board/form";
 	}
 	
 	/**
@@ -75,14 +78,15 @@ public class BoardController {
 	 * @param param
 	 * @param model
 	 */
-	@GetMapping("/edit/{boardSeq}")
+	@GetMapping("/{menuType}/edit/{boardSeq}")
 	@RequestConfig(loginCheck = true)
-	public String edit(@PathVariable(required = true) long boardSeq , Model model) {
+	public String edit(@PathVariable MenuType menuType ,@PathVariable(required = true) long boardSeq , Model model) {
 		Board board = boardService.get(boardSeq);
 		if(board == null) {
 			throw new BaseException(BaseResponseCode.DATA_IS_NULL,new String[] {"게시물"});
 		}
 		model.addAttribute("board",board);
+		model.addAttribute("menuType",menuType);
 		return "/board/form";
 	}
 	
@@ -99,10 +103,12 @@ public class BoardController {
 	public String getList(@PathVariable MenuType menuType, @ApiParam BoardSearchParameter param , @ApiParam PageRequest pageRequest, Model model){
 		
 		log.info("타입 한 번 찍어볼까요? {}", menuType);
+		param.setBoardType(menuType.getBoardType());
 		PageRequestParameter<BoardSearchParameter> pageRequestParameter  = new PageRequestParameter<BoardSearchParameter>(pageRequest, param);
 		
 		List<Board> list = boardService.getList(pageRequestParameter);
 		model.addAttribute("boardList", list);
+		model.addAttribute("menuType",menuType);
 		return "/board/list";
 	}
 	
@@ -112,26 +118,27 @@ public class BoardController {
 	 * @return
 	 */
 //	url에 값이 파라미터로 들어가서 리턴 됨
-	@GetMapping(value = "/detail/{boardSeq}")
+	@GetMapping(value = "/{menuType}/{boardSeq}")
 //	스웨거에서 해당 api의 파라미터를 설명
 	@ApiOperation(value ="상세 조회", notes = "게시물 번호에 해당하는 상세 정보를 조회할 수 있습니다.")
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "boardSeq" , value = "게시물 번호", example = "1")
 	})
-	public  String detail(@PathVariable int boardSeq, Model model) {
+	public  String detail(@PathVariable MenuType menuType,@PathVariable int boardSeq, Model model) {
 		
 		Board board = boardService.get(boardSeq);
 		if(board == null) {
 			throw new BaseException(BaseResponseCode.DATA_IS_NULL,new String[] {"게시물"} );
 		}
 		model.addAttribute("board", board);
+		model.addAttribute("menuType",menuType);
 		return  "/board/detail";
 	}
 
 	/** 등록 및 수정 처리
 	 * @param board
 	 */
-	@PostMapping("/save")
+	@PostMapping("/{menuType}/save")
 	@RequestConfig(loginCheck = true)
 	@ResponseBody
 	@ApiOperation(value ="등록 수정", notes = "신규 게시물 저장 및 기존 게시물 수정을 할 수 있습니다.", produces = "multipart/form-data")
@@ -141,7 +148,7 @@ public class BoardController {
 		@ApiImplicitParam(name = "contents" , value = "게시물 내용", example = "spring 강좌"),
 	})
 	
-	public  BaseResponse<String> save ( final Board board,  @ApiParam(name="파일", value ="files", required = false)  final MultipartFile[] files) {
+	public  BaseResponse<Long> save (@PathVariable MenuType menuType, final Board board,  @ApiParam(name="파일", value ="files", required = false)  final MultipartFile[] files) {
 		
 		log.info("파일 정보 {} " , files );
 		// 제목 필수 체크
@@ -152,13 +159,14 @@ public class BoardController {
 		if(StringUtils.isEmpty(board.getContents())) {
 			throw new BaseException(BaseResponseCode.VALIDATE_REQUIRED,new String[] {"contents", "제목"} );
 		}
+		 board.setBoardType(menuType.getBoardType());
 		 boolean boardSave = boardService.save(board,files);
 //		 객체는 레퍼런수를 참조하기 때문에 가능
 		 
 		 if(boardSave) {
-			 return  new BaseResponse<String>( Long.toString(board.getBoardSeq())+ " file : true" );
+			 return  new BaseResponse<Long>(board.getBoardSeq());
 		 }else {
-			 return  new BaseResponse<String>(BaseResponseCode.SUCCEESS , "저장되었습니다.");
+			 return  new BaseResponse<Long>(board.getBoardSeq());
 		 }
 		 
 	}

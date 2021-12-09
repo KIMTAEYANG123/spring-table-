@@ -21,4 +21,8 @@ public enum MenuType {
 
 	}
 	
+	 public BoardType getBoardType() {
+		return boardType;
+	}
+	
 }

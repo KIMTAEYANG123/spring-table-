@@ -76,6 +76,8 @@ public class WebConfiguration implements WebMvcConfigurer {
 		return multipartResolver;
 	}
 	
+	
+//	sitemesh 빈 등록
 	@Bean
 	public FilterRegistrationBean<SitemeshConfiguration> sitemeshBean(){
 		FilterRegistrationBean<SitemeshConfiguration> filter = new FilterRegistrationBean<>();

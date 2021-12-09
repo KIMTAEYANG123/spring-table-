@@ -10,8 +10,9 @@ public class BaseResponse<T> {
 	private T data;
 	
 	public BaseResponse(T data) {
-		this.code = BaseResponseCode.SUCCEESS;
+		this.code = BaseResponseCode.SUCCESS;
 		this.data = data;
+		this.message = "저장되었습니다.";
 	}
 
 	public BaseResponse(BaseResponseCode responseCode, String message) {
