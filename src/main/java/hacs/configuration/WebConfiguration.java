@@ -3,6 +3,7 @@ package hacs.configuration;
 import java.util.List;
 import java.util.Locale;
 
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
@@ -73,6 +74,13 @@ public class WebConfiguration implements WebMvcConfigurer {
 		multipartResolver.setDefaultEncoding("UTF-8"); // 파일 인코딩 설정
 		multipartResolver.setMaxUploadSizePerFile(5 * 1024 * 1024); // 파일당 업로드 크기 제한 (5MB)
 		return multipartResolver;
+	}
+	
+	@Bean
+	public FilterRegistrationBean<SitemeshConfiguration> sitemeshBean(){
+		FilterRegistrationBean<SitemeshConfiguration> filter = new FilterRegistrationBean<>();
+		filter.setFilter(new SitemeshConfiguration());
+		return filter;
 	}
 	
 
